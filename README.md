@@ -21,8 +21,10 @@ CodeDiary is a simple and small C++ header-only Logger, built using simple templ
 
 Just include `Logger.hpp` and you're set!
 
+**Note**: You only need to include Logger.hpp . The other file, SampleFormatter.hpp is just a sample Formatter I built that might help you.
+
 You can use it to easily manage your logs. By using template metaprogramming techniques, CodeDiary allows you to customize its behavior statically, externally if you wish to do so. You may change the way the log is formatted or where it is printed (file, console, etc...)
-The easiest way to use CodeDiary is:
+The easiest way to use CodeDiary is using its default template arguments like this:
 
     Logger<>::Log("This is my first log", Logger<>::LogType::DEBUG);
 
@@ -39,13 +41,27 @@ which will have this as output:
 
     Sat Jul 18 08:31:13 2015 This is my first log DEBUG
 
+The Logger class takes two templated arguments, a Formatter and a Dispatcher. The Formatter is used to alter the log message accoarding to your needs and the Dispatcher is used to send it to the outer world somehow.
+The Formatter has to have one public/protected static member function with this signature:
+
+    static std::string Format(const std::string& msg, const std::string& type)
+
+While the dispatcher has to have one like this:
+
+    static void Dispatch(const std::string& msg)
+
+You can see samples of both Dispatcher and Formatter in Logger.hpp and SampleFormatter.hpp
+
 ## <a name="requirements"/> Requirements
  * Any C++11 compiler (MSVC, Clang++, G++, ...)
  * Python 2.7
 
 ## Building <a name="building"/>
+There is no point building the library alone since it's header only but to build the test just follow these steps:
+
  1. Clone the project and cd to the cloned directory.
- 2. Run:  
+ 2. `cd test`
+ 3. Run:  
     ```
     python waf distclean configure --check-c-compiler=<CC> --check-cxx-compiler=<CXX>
     ```  
@@ -53,8 +69,10 @@ which will have this as output:
     ```
     python waf clean build install --variant=<VARIANT> --arch=<ARCH>
     ```  
-    where VARIANT can be either Release|Debug and ARCH can be either x86|x64.
- 3. Built binaries will reside in the ```bin\<ARCH>\<VARIANT>``` directory.
+    where VARIANT can be either {Release | Debug} and ARCH can be either {x86 | x64}.
+ 4. Built binaries will reside in the `bin\<ARCH>\<VARIANT>` directory.
+
+For building I use the [waf build tool](https://github.com/waf-project/waf).
 
 ## <a name="changelog"/> Change Log
  * TODO: Track Major release history after first release
