@@ -95,7 +95,7 @@ class DefaultDispatcher
 protected:
     static void Dispatch(const std::string& msg)
     {
-        std::cout << msg << std::endl;
+        std::clog << msg << std::endl;
     }
 };
 
