@@ -1,0 +1,4 @@
+# Ignore output folders
+
+bin/
+tmp/
