@@ -102,7 +102,7 @@ protected:
 /// Policy:
 /// Formatter   -> must have one "static std::string Format(const std::string& msg, const std::string& type)"
 /// Dispatcher  -> one "static void Dispatch(const std::string& msg)"
-template<typename Formatter = DefaultFormatter, typename Dispatcher = DefaultDispatcher>
+template<class Formatter = DefaultFormatter, class Dispatcher = DefaultDispatcher>
 class Logger : private Formatter, private Dispatcher
 {
 public:
@@ -116,9 +116,7 @@ public:
 
     static void Log(const std::string& msg, LogType type)
     {
-        std::string toLog;
-        toLog = Formatter::Format(msg, LogTypeToString(type));
-        Dispatcher::Dispatch(toLog);
+        Dispatcher::Dispatch(Formatter::Format(msg, LogTypeToString(type)));
     }
 
 private:
