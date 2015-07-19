@@ -127,15 +127,15 @@ private:
         switch(type)
         {
             case LogType::DEBUG:
-                return std::string("DEBUG");
+                return "DEBUG";
             case LogType::INFO:
-                return std::string("INFO");
+                return "INFO";
             case LogType::WARN:
-                return std::string("WARN");
+                return "WARN";
             case LogType::ERROR:
-                return std::string("ERROR");
+                return "ERROR";
             default:
-                return std::string();
+                return "";
         }
     }
 };

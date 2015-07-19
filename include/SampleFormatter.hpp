@@ -66,7 +66,6 @@ protected:
         specialCharacters.push_back('L'); // type
 
         // Parse message
-        //for(std::string::iterator it : msg)
         for(auto it = std::begin(msg); it != std::end(msg); it++)
         {
             // Probably special type
@@ -106,7 +105,7 @@ protected:
             }
         }
 
-        return std::move(rVal);
+        return rVal;
     }
 };
 
