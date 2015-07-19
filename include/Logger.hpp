@@ -99,11 +99,14 @@ protected:
     }
 };
 
-/// Policy:
-/// Formatter   -> must have one "static std::string Format(const std::string& msg, const std::string& type)"
-/// Dispatcher  -> one "static void Dispatch(const std::string& msg)"
-template<class Formatter = DefaultFormatter, class Dispatcher = DefaultDispatcher>
-class Logger : private Formatter, private Dispatcher
+/// BaseLogger class serves as a wrapper for the LogType. I only have it to keep
+/// CodeDiary v1.1.0 compatible with v1.0.0. In v2.0.0 the LogType will be standing
+/// alone in the namespace.
+/*
+* TODO: I kept this because for compatibility reasons with v1.0.0. In the next Major release
+*       this will be removed
+*/
+class BaseLogger
 {
 public:
     enum class LogType
@@ -113,7 +116,20 @@ public:
         WARN,
         ERROR
     };
+};
 
+/// This empty base Logger class helps me implement template class overloading. Without this
+/// I wouldn't be able to create "class Logger<Obj, Formatter, Dispatcher>"
+template<typename... T>
+class Logger {};
+
+/// Policy:
+/// Formatter   -> must have "static std::string Format(const std::string& msg, const std::string& type)"
+/// Dispatcher  -> must have "static void Dispatch(const std::string& msg)"
+template<class Formatter, class Dispatcher>
+class Logger<Formatter, Dispatcher> : public BaseLogger, private Formatter, private Dispatcher
+{
+public:
     static void Log(const std::string& msg, LogType type)
     {
         Dispatcher::Dispatch(Formatter::Format(msg, LogTypeToString(type)));
@@ -135,6 +151,37 @@ private:
             default:
                 return "";
         }
+    }
+};
+
+/// Logger<> specialization is just the Logger with default formatter/dispatcher
+template<>
+class Logger<> : public Logger<DefaultFormatter, DefaultDispatcher>
+{
+};
+
+/// This template specialization takes only one tempalte argument which is the formatter.
+/// It is just the logger with the argument as Formatter and DefaultDispatcher as Dispatcher.
+/* 
+ * TODO: I kept this because for compatibility reasons with v1.0.0. In the next Major release
+ *       this will be removed 
+ */
+template<class Formatter>
+class Logger<Formatter> : public Logger<Formatter, DefaultDispatcher>
+{
+};
+
+/// Policy:
+/// Obj         -> must have "std::string ToString()"
+/// Formatter   -> must have "static std::string Format(const std::string& msg, const std::string& type)"
+/// Dispatcher  -> must have "static void Dispatch(const std::string& msg)"
+template<class Obj, class Formatter, class Dispatcher>
+class Logger<Obj, Formatter, Dispatcher> : public Logger<Formatter, Dispatcher>
+{
+public:
+    static void Log(const Obj& obj, BaseLogger::LogType type)
+    {
+        Logger<Formatter, Dispatcher>::Log(obj.ToString(), type);
     }
 };
 

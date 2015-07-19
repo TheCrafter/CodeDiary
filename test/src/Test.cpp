@@ -43,8 +43,23 @@
 /*                                                                            */
 /******************************************************************************/
 
+#include <string>
 #include "Logger.hpp"
 #include "SampleFormatter.hpp"
+
+struct MyType
+{
+    int x;
+
+    MyType() : x(5)
+    {
+    }
+
+    std::string ToString() const
+    {
+        return std::to_string(x);
+    }
+};
 
 void Test()
 {
@@ -60,8 +75,19 @@ void Test()
     Logger<SampleFormatter>::Log("\\T This is my third log \\L", Logger<SampleFormatter>::LogType::DEBUG);
 }
 
+void Test2()
+{
+    using namespace CodeDiary;
+
+    MyType type;
+
+    // Test logging a type
+    Logger<MyType, DefaultFormatter, DefaultDispatcher>::Log(type, Logger<MyType, DefaultFormatter, DefaultDispatcher>::LogType::DEBUG);
+}
+
 int main()
 {
     Test();
+    Test2();
     return 0;
 }
