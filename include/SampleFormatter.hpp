@@ -47,7 +47,7 @@
 #define CODEDIARY_SAMPLEFORMATTER
 
 #include "Logger.hpp"
-#include <list>
+#include <unordered_set>
 
 namespace CodeDiary
 {
@@ -61,9 +61,11 @@ protected:
     {
         std::string rVal;
         
-        std::list<char> specialCharacters;
-        specialCharacters.push_back('T'); // time
-        specialCharacters.push_back('L'); // type
+        std::unordered_set<char> specialCharacters = 
+        {
+            'T',    // time
+            'L'     // type
+        };
 
         // Parse message
         for(auto it = std::begin(msg); it != std::end(msg); it++)
@@ -76,15 +78,7 @@ protected:
                 tempIt++;
 
                 // Check if we are at a special character
-                bool isSpecialCharacter = false;
-                for(auto listIt : specialCharacters)
-                {
-                    if(listIt == *tempIt)
-                    {
-                        isSpecialCharacter = true;
-                        break;
-                    }
-                }
+                bool isSpecialCharacter = (specialCharacters.count(*tempIt) != 0);
 
                 // Handle special character
                 if(isSpecialCharacter)
