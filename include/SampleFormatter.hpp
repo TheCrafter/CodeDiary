@@ -56,16 +56,13 @@ namespace CodeDiary
 /// extends BaseFormatter to get access to GetCurrentTime() function.
 class SampleFormatter : public BaseFormatter<SampleFormatter>
 {
+private:
+    static std::unordered_set<char> mSpecialCharacters;
+
 protected:
     static std::string Format(const std::string& msg, const std::string& type)
     {
         std::string rVal;
-        
-        std::unordered_set<char> specialCharacters = 
-        {
-            'T',    // time
-            'L'     // type
-        };
 
         // Parse message
         for(auto it = std::begin(msg); it != std::end(msg); it++)
@@ -78,7 +75,7 @@ protected:
                 tempIt++;
 
                 // Check if we are at a special character
-                bool isSpecialCharacter = (specialCharacters.count(*tempIt) != 0);
+                bool isSpecialCharacter = (mSpecialCharacters.count(*tempIt) != 0);
 
                 // Handle special character
                 if(isSpecialCharacter)
@@ -101,6 +98,13 @@ protected:
 
         return rVal;
     }
+};
+
+// Initialize static class member
+std::unordered_set<char> SampleFormatter::mSpecialCharacters =
+{
+    'T',    // time
+    'L'     // type
 };
 
 } // namespace CodeDiary
