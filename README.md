@@ -1,4 +1,4 @@
-# CodeDiary - v1.0.0
+# CodeDiary - v1.1.0
 
 ![Logo](doc/assets/logo.png)
 
@@ -11,6 +11,7 @@ CodeDiary is a simple and small C++ header-only Logger, built using simple templ
  * [Requirements](#requirements)
  * [Building the Samples](#building)
  * [Changelog](#changelog)
+ * [TODO](#todo) 
  * [Contributing](#contributing)
  * [Licensing](#licensing)
 
@@ -20,8 +21,6 @@ CodeDiary is a simple and small C++ header-only Logger, built using simple templ
 ## <a name="usage"/> Usage
 
 Just include `Logger.hpp` and you're set!
-
-**Note**: You only need to include Logger.hpp . The other file, SampleFormatter.hpp is just a sample Formatter I built that might help you.
 
 You can use it to easily manage your logs. By using template metaprogramming techniques, CodeDiary allows you to customize its behavior statically, externally if you wish to do so. You may change the way the log is formatted or where it is printed (file, console, etc...)
 The easiest way to use CodeDiary is using its default template arguments like this:
@@ -34,7 +33,7 @@ This is by using the default Logger. The output will be:
 
 Instead of using the default Logger you may specify a Formatter or a Dispatcher of your choice. For example:
 
-    // The SampleFormatter is provided in SampleFormatter.hpp
+    // The SampleFormatter is provided in samples/src/SampleFormatter.hpp
     Logger<SampleFormatter>::Log("\\T This is my first log \\L", Logger<SampleFormatter>::LogType::DEBUG);
 
 which will have this as output:
@@ -52,6 +51,10 @@ While the dispatcher has to have one like this:
 
 You can see samples of both Dispatcher and Formatter in Logger.hpp and SampleFormatter.hpp
 
+You can also log your own objects right away if the implement a `std::string ToString()` function. Watch `samples/src/Sample1.cpp' for an example.
+
+**Note:** The `ToString()` method is temporary. In later versions the Logger will be functioning with streams so the `ToString()` will be replaced by the `>> / <<` operators.
+
 ## <a name="requirements"/> Requirements
  * Any C++11 compiler (MSVC, Clang++, G++, ...)
  * Python 2.7
@@ -60,7 +63,7 @@ You can see samples of both Dispatcher and Formatter in Logger.hpp and SampleFor
 There is no point building the library alone since it's header only but to build the test just follow these steps:
 
  1. Clone the project and cd to the cloned directory.
- 2. `cd test`
+ 2. `cd samples`
  3. Run:  
     ```
     python waf distclean configure --check-c-compiler=<CC> --check-cxx-compiler=<CXX>
@@ -75,10 +78,18 @@ There is no point building the library alone since it's header only but to build
 For building I use the [waf build tool](https://github.com/waf-project/waf).
 
 ## <a name="changelog"/> Change Log
- * TODO: Track Major release history after first release
+ 
+### v1.1.0
+ * Reworked Logger design.
+   * Now you can use a 3rd parameter to Log immediately an object.
+ * Changed directory structure by renaming test folder to samples.
+ * Reworked SampleFormatter a bit and moved it to samples folder.
+
+## <a name="todo"/> TODO:
+ * Replace strings with {i/o}stream.
 
 ## <a name="contributing"/> Contributing
- * For bug fixes, any well checked pull requests are welcome
+ * For bug fixes, any well checked pull requests are welcome.
 
 ## <a name="licensing"/> Licensing
 
