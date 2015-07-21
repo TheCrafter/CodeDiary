@@ -60,51 +60,7 @@ private:
     static std::unordered_set<char> mSpecialCharacters;
 
 protected:
-    static std::string Format(const std::string& msg, const std::string& type)
-    {
-        std::string rVal;
-
-        // Parse message
-        for(auto it = std::begin(msg); it != std::end(msg); it++)
-        {
-            // Probably special type
-            if(*it == '\\')
-            {
-                // Check next
-                auto tempIt = it;
-                tempIt++;
-
-                // Check if we are at a special character
-                bool isSpecialCharacter = (mSpecialCharacters.count(*tempIt) != 0);
-
-                // Handle special character
-                if(isSpecialCharacter)
-                {
-                    if(*tempIt == 'T')
-                        rVal += GetCurrentTime();
-                    else if(*tempIt == 'L')
-                        rVal += type;
-                    
-                    // Ignore the special character part and continue
-                    it++;
-                    continue;
-                }
-            }
-            else
-            {
-                rVal += *it;
-            }
-        }
-
-        return rVal;
-    }
-};
-
-// Initialize static class member
-std::unordered_set<char> SampleFormatter::mSpecialCharacters =
-{
-    'T',    // time
-    'L'     // type
+    static std::string Format(const std::string& msg, const std::string& type);
 };
 
 } // namespace CodeDiary
